@@ -23,6 +23,7 @@ import net.minecraft.server.network.ServerQueryNetworkHandler;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerHandshakeNetworkHandler.class)
 public class MixinServerHandshakeNetworkHandler {
@@ -36,21 +37,12 @@ public class MixinServerHandshakeNetworkHandler {
     @Shadow
     public ClientConnection connection;
 
-    @Shadow
-    public ClientConnection getConnection() {
-        return null;
-    }
-
-    @Shadow
-    public void onDisconnected(Text reason) {
-    }
 
     /**
      * @reason .
      * @author .
      */
-    @Overwrite
-    public void onHandshake(HandshakeC2SPacket packethandshakinginsetprotocol) {
+    public void onHandshake(HandshakeC2SPacket packethandshakinginsetprotocol, CallbackInfo ci) {
         switch (packethandshakinginsetprotocol.getIntendedState()) {
             case LOGIN:
                 this.connection.setState(NetworkState.LOGIN);

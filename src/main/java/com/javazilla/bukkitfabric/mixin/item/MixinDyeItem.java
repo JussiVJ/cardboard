@@ -27,7 +27,7 @@ public class MixinDyeItem {
      * @reason .
      * @author .
      */
-    @SuppressWarnings("deprecation")
+   /* @SuppressWarnings("deprecation")
     @Overwrite
     public ActionResult useOnEntity(ItemStack itemstack, PlayerEntity entityhuman, LivingEntity entityliving, Hand enumhand) {
         if (!(entityliving instanceof SheepEntity)) return ActionResult.PASS;
@@ -46,6 +46,6 @@ public class MixinDyeItem {
             return ActionResult.success(entityhuman.world.isClient);
         }
         return ActionResult.PASS;
-    }
+    }*/
 
 }

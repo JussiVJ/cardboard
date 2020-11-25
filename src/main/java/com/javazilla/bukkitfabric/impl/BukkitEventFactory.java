@@ -268,12 +268,14 @@ public class BukkitEventFactory {
         }
 
         org.bukkit.entity.Entity hitEntity = null;
-        if (position.getType() == Type.ENTITY)
+        if (position.getType() == Type.ENTITY) {
+            assert position instanceof EntityHitResult;
             hitEntity = ((IMixinEntity)((EntityHitResult) position).getEntity()).getBukkitEntity();
+        }
 
-        org.bukkit.entity.Entity e = ((IMixinEntity)entity).getBukkitEntity();
+        CraftEntity e = ((IMixinEntity)entity).getBukkitEntity();
         if (!(e instanceof Projectile)) {
-            BukkitLogger.getLogger().warning("Entity \"" + ((CraftEntity)e).nms.getEntityName() + "\" is not an instance of Projectile! Can not fire ProjectileHitEvent!");
+            BukkitLogger.getLogger().warning("Entity \"" + e.nms.getEntityName() + "\" is not an instance of Projectile! Can not fire ProjectileHitEvent!");
             return;
         }
 
@@ -343,41 +345,39 @@ public class BukkitEventFactory {
     public static Cancellable handleStatisticsIncrease(PlayerEntity entityHuman, net.minecraft.stat.Stat<?> statistic, int current, int newValue) {
         Player player = (Player) ((IMixinServerEntityPlayer) entityHuman).getBukkitEntity();
         Event event;
-        if (true) {
-            org.bukkit.Statistic stat = CraftStatistic.getBukkitStatistic(statistic);
-            if (stat == null) {
-                System.err.println("Unhandled statistic: " + statistic);
+        Statistic stat = CraftStatistic.getBukkitStatistic(statistic);
+        if (stat == null) {
+            System.err.println("Unhandled statistic: " + statistic);
+            return null;
+        }
+        switch (stat) {
+            case FALL_ONE_CM:
+            case BOAT_ONE_CM:
+            case CLIMB_ONE_CM:
+            case WALK_ON_WATER_ONE_CM:
+            case WALK_UNDER_WATER_ONE_CM:
+            case FLY_ONE_CM:
+            case HORSE_ONE_CM:
+            case MINECART_ONE_CM:
+            case PIG_ONE_CM:
+            case PLAY_ONE_MINUTE:
+            case SWIM_ONE_CM:
+            case WALK_ONE_CM:
+            case SPRINT_ONE_CM:
+            case CROUCH_ONE_CM:
+            case TIME_SINCE_DEATH:
+            case SNEAK_TIME:
                 return null;
-            }
-            switch (stat) {
-                case FALL_ONE_CM:
-                case BOAT_ONE_CM:
-                case CLIMB_ONE_CM:
-                case WALK_ON_WATER_ONE_CM:
-                case WALK_UNDER_WATER_ONE_CM:
-                case FLY_ONE_CM:
-                case HORSE_ONE_CM:
-                case MINECART_ONE_CM:
-                case PIG_ONE_CM:
-                case PLAY_ONE_MINUTE:
-                case SWIM_ONE_CM:
-                case WALK_ONE_CM:
-                case SPRINT_ONE_CM:
-                case CROUCH_ONE_CM:
-                case TIME_SINCE_DEATH:
-                case SNEAK_TIME:
-                    return null;
-                default:
-            }
-            if (stat.getType() == Statistic.Type.UNTYPED) {
-                event = new PlayerStatisticIncrementEvent(player, stat, current, newValue);
-            } else if (stat.getType() == Statistic.Type.ENTITY) {
-                EntityType entityType = CraftStatistic.getEntityTypeFromStatistic((net.minecraft.stat.Stat<net.minecraft.entity.EntityType<?>>) statistic);
-                event = new PlayerStatisticIncrementEvent(player, stat, current, newValue, entityType);
-            } else {
-                Material material = CraftStatistic.getMaterialFromStatistic(statistic);
-                event = new PlayerStatisticIncrementEvent(player, stat, current, newValue, material);
-            }
+            default:
+        }
+        if (stat.getType() == Statistic.Type.UNTYPED) {
+            event = new PlayerStatisticIncrementEvent(player, stat, current, newValue);
+        } else if (stat.getType() == Statistic.Type.ENTITY) {
+            EntityType entityType = CraftStatistic.getEntityTypeFromStatistic((net.minecraft.stat.Stat<net.minecraft.entity.EntityType<?>>) statistic);
+            event = new PlayerStatisticIncrementEvent(player, stat, current, newValue, entityType);
+        } else {
+            Material material = CraftStatistic.getMaterialFromStatistic(statistic);
+            event = new PlayerStatisticIncrementEvent(player, stat, current, newValue, material);
         }
         Bukkit.getPluginManager().callEvent(event);
         return (Cancellable) event;

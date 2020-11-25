@@ -75,7 +75,6 @@
     "entity.block.MixinAbstractFurnaceBlockEntity",
     "entity.block.MixinSignBlockEntity",
     "entity.block.MixinBoatDispenserBehavior",
-    "entity.block.MixinHopperBlockEntity",
     "entity.block.MixinShulkerBoxBlockEntity",
 
     "network.MixinGameMessageS2CPacket",

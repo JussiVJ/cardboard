@@ -85,6 +85,11 @@ public class HumanEntityImpl extends LivingEntityImpl implements HumanEntity {
         return (PlayerEntity) nms;
     }
 
+    public void setHandle(PlayerEntity entity) {
+        super.setHandle(entity);
+        this.inventory = new CardboardPlayerInventory(entity.getInventory());
+    }
+
     public IMixinServerEntityPlayer getInterface() {
         return (IMixinServerEntityPlayer)(ServerPlayerEntity) nms;
     }

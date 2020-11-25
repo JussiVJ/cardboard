@@ -23,7 +23,6 @@ import net.minecraft.server.MinecraftServer;
 @Mixin(LegacyQueryHandler.class)
 public class MixinLegacyQueryHandler {
 
-    //@Shadow @Final private static Logger LOGGER = LogManager.getLogger();
     @Shadow private ByteBuf toBuffer(String s) {return null;}
     @Shadow private void reply(ChannelHandlerContext channelhandlercontext, ByteBuf bytebuf) {}
 

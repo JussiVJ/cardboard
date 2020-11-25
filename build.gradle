@@ -40,9 +40,9 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    minecraft "com.mojang:minecraft:20w48a"
+    mappings "net.fabricmc:yarn:20w48a+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.10.8"
 
     // Spigot API
     extraLibs group: "org.spigotmc", name: "spigot-api", version: "${project.api_version}"

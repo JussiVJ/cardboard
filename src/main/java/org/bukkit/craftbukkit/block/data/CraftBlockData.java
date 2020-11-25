@@ -370,7 +370,6 @@ public class CraftBlockData implements BlockData {
         register(net.minecraft.block.CakeBlock.class, org.bukkit.craftbukkit.block.impl.CraftCake::new);
         register(net.minecraft.block.CampfireBlock.class, org.bukkit.craftbukkit.block.impl.CraftCampfire::new);
         register(net.minecraft.block.CarrotsBlock.class, org.bukkit.craftbukkit.block.impl.CraftCarrots::new);
-        register(net.minecraft.block.CauldronBlock.class, org.bukkit.craftbukkit.block.impl.CraftCauldron::new);
         register(net.minecraft.block.ChainBlock.class, org.bukkit.craftbukkit.block.impl.CraftChain::new);
         register(net.minecraft.block.ChestBlock.class, org.bukkit.craftbukkit.block.impl.CraftChest::new);
         register(net.minecraft.block.TrappedChestBlock.class, org.bukkit.craftbukkit.block.impl.CraftChestTrapped::new);

@@ -54,7 +54,7 @@ public class BukkitFabricMod implements ModInitializer {
 
         try {
             MappingsReader.main(null);
-           // if (FabricLoader.getInstance().isDevelopmentEnvironment())
+           //if (FabricLoader.getInstance().isDevelopmentEnvironment())
            //     IngotReader.start();
         } catch (IOException e) {
             e.printStackTrace();

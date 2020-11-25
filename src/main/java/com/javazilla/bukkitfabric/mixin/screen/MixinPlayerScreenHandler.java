@@ -1,5 +1,8 @@
 package com.javazilla.bukkitfabric.mixin.screen;
 
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Text;
 import org.bukkit.craftbukkit.inventory.CraftInventoryCrafting;
 import org.cardboardpowered.impl.inventory.CardboardInventoryView;
 import org.bukkit.entity.Player;
@@ -18,7 +21,7 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.TranslatableText;
 
 @Mixin(PlayerScreenHandler.class)
-public class MixinPlayerScreenHandler extends MixinScreenHandler {
+public class MixinPlayerScreenHandler extends MixinScreenHandler implements NamedScreenHandlerFactory {
 
     private CraftingInventory craftingInput;
     private CraftingResultInventory craftingResult;
@@ -41,6 +44,16 @@ public class MixinPlayerScreenHandler extends MixinScreenHandler {
         CraftInventoryCrafting inventory = new CraftInventoryCrafting(this.craftingInput, this.craftingResult);
         bukkitEntity = new CardboardInventoryView((Player)((IMixinServerEntityPlayer)this.player.player).getBukkitEntity(), inventory, (PlayerScreenHandler)(Object)this);
         return bukkitEntity;
+    }
+
+    @Override
+    public ScreenHandler createMenu(int arg0, PlayerInventory arg1, PlayerEntity arg2) {
+        return new PlayerScreenHandler(arg1, true, arg2);
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return this.getTitle();
     }
 
 }

@@ -21,6 +21,7 @@ package com.javazilla.bukkitfabric.mixin;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -68,7 +69,7 @@ public class MixinBlockItem {
      * @reason Bukkit Overwrite
      */
     @Inject(at = @At("HEAD"), method = "place", cancellable = true)
-    public void place(ItemPlacementContext blockactioncontext, CallbackInfoReturnable<ActionResult> ci) {
+    public void place1(ItemPlacementContext blockactioncontext, CallbackInfoReturnable<ActionResult> ci) {
         if (!blockactioncontext.canPlace()) {
             ci.setReturnValue(ActionResult.FAIL);
             return;
@@ -81,7 +82,7 @@ public class MixinBlockItem {
             } else {
                 BlockState iblockdata = this.getPlacementState(blockactioncontext1);
                 org.bukkit.block.BlockState blockstate = null;
-                if (((BlockItem)(Object)this) instanceof LilyPadItem)
+                //if (((BlockItem)(Object)this) instanceof LilyPadItem)
                     blockstate = org.bukkit.craftbukkit.block.CraftBlockState.getBlockState(blockactioncontext1.getWorld(), blockactioncontext1.getBlockPos());
 
                 boolean no = ((IMixinServerPlayerInteractionManager)((ServerPlayerEntity)blockactioncontext1.getPlayer()).interactionManager).getFiredInteractBF();

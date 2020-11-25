@@ -78,14 +78,19 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
 
     static {
-        for (Block block : Registry.BLOCK)
-            BLOCK_MATERIAL.put(block, Material.getMaterial(Registry.BLOCK.getId(block).getPath().toUpperCase(Locale.ROOT)));
+        for (Block block : Registry.BLOCK){
+            Material material = Material.getMaterial(Registry.BLOCK.getId(block).getPath().toUpperCase(Locale.ROOT));
+            BLOCK_MATERIAL.put(block, material == null ? Material.STONE : material);
+        }
 
-        for (Item item : Registry.ITEM)
-            ITEM_MATERIAL.put(item, Material.getMaterial(Registry.ITEM.getId(item).getPath().toUpperCase(Locale.ROOT)));
+        for (Item item : Registry.ITEM){
+            Material material = Material.getMaterial(Registry.ITEM.getId(item).getPath().toUpperCase(Locale.ROOT));
+            ITEM_MATERIAL.put(item, material == null ? Material.STONE : material);
+        }
 
-        for (net.minecraft.fluid.Fluid fluid : Registry.FLUID)
+        for (net.minecraft.fluid.Fluid fluid : Registry.FLUID){
             FLUID_MATERIAL.put(fluid, org.bukkit.Registry.FLUID.get(CraftNamespacedKey.fromMinecraft(Registry.FLUID.getId(fluid))));
+        }
 
         for (Material material : Material.values()) {
             if (material.isLegacy()) continue;
@@ -98,7 +103,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     public static Material getMaterial(Block block) {
-        return BLOCK_MATERIAL.get(block);
+        return BLOCK_MATERIAL.getOrDefault(block, Material.STONE);
     }
 
     public static Material getMaterial(Item item) {

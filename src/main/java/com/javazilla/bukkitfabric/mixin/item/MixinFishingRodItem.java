@@ -22,7 +22,8 @@ import net.minecraft.world.World;
 @Mixin(FishingRodItem.class)
 public class MixinFishingRodItem {
 
-    @Inject(at = @At("HEAD"), method = "use", cancellable = true)
+
+    /*@Inject(at = @At("HEAD"), method = "use", cancellable = true)
     public void bukkitize(World world, PlayerEntity entityhuman, Hand enumhand, CallbackInfoReturnable<TypedActionResult<ItemStack>> ci) {
         if (null == entityhuman.fishHook) {
             ItemStack itemstack = entityhuman.getStackInHand(enumhand);
@@ -35,13 +36,13 @@ public class MixinFishingRodItem {
     
             if (playerFishEvent.isCancelled()) {
                 entityhuman.fishHook = null;
-                ci.setReturnValue( new TypedActionResult<ItemStack>(ActionResult.PASS, itemstack) );
+                ci.setReturnValue(new TypedActionResult<>(ActionResult.PASS, itemstack) );
                 return;
             }
             world.spawnEntity(entityfishinghook); 
             ci.setReturnValue(TypedActionResult.success(itemstack, false));
-            return;
         }
-    }
+    }*/
+
 
 }

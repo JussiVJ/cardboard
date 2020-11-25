@@ -1463,7 +1463,8 @@ public class WorldImpl implements World {
 
             if (LeashHitch.class.isAssignableFrom(clazz)) {
                 entity = new LeashKnotEntity(nms, new BlockPos(x, y, z));
-                entity.teleporting = true;
+
+                //TODO entity.teleporting = true;
             } else {
                 // No valid face found
                 Preconditions.checkArgument(face != BlockFace.SELF, "Cannot spawn hanging entity for %s at %s (no free face)", clazz.getName(), location);
@@ -1476,7 +1477,7 @@ public class WorldImpl implements World {
                 }
             }
 
-            if (entity != null && !((AbstractDecorationEntity) entity).canStayAttached()) {
+            if (!((AbstractDecorationEntity) entity).canStayAttached()) {
                 throw new IllegalArgumentException("Cannot spawn hanging entity for " + clazz.getName() + " at " + location);
             }
         } else if (TNTPrimed.class.isAssignableFrom(clazz)) {

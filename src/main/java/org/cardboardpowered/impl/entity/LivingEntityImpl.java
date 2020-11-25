@@ -162,6 +162,12 @@ public class LivingEntityImpl extends CraftEntity implements LivingEntity {
         return nms;
     }
 
+
+    public void setHandle(net.minecraft.entity.LivingEntity entity) {
+        super.setHandle(entity);
+        this.nms = entity;
+    }
+
     @SuppressWarnings({ "unchecked" })
     @Override
     public <T extends Projectile> T launchProjectile(Class<? extends T> projectile, Vector arg1) {

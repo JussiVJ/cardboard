@@ -14,6 +14,7 @@ import net.minecraft.loot.context.LootContext;
 @Mixin(RandomChanceWithLootingLootCondition.class)
 public class MixinRandomChanceWithLootingLootCondition {
 
+
     @Shadow private float chance;
     @Shadow private float lootingMultiplier;
 
@@ -25,5 +26,7 @@ public class MixinRandomChanceWithLootingLootCondition {
             return;
         }
     }
+
+
 
 }

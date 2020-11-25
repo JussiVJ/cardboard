@@ -18,13 +18,16 @@
  */
 package com.javazilla.bukkitfabric.mixin.entity;
 
+import java.util.Optional;
 import java.util.OptionalInt;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.cardboardpowered.impl.entity.PlayerImpl;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
@@ -93,9 +96,15 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
     public int screenHandlerSyncId;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void init(MinecraftServer server, ServerWorld world, GameProfile profile, ServerPlayerInteractionManager interactionManager, CallbackInfo ci) {
-        this.bukkit = new PlayerImpl((ServerPlayerEntity)(Object)this);
-        CraftServer.INSTANCE.playerView.add(this.bukkit);
+    public void init(MinecraftServer server, ServerWorld world, GameProfile profile, CallbackInfo ci) {
+        Optional<PlayerImpl> optional = CraftServer.INSTANCE.playerView.stream().filter(p -> p.getUniqueId().equals(this.uuid)).findFirst();
+        if(optional.isPresent()){
+            this.bukkit = optional.get();
+            this.bukkit.setHandle((ServerPlayerEntity)(Object)this);
+        }else{
+            this.bukkit = new PlayerImpl((ServerPlayerEntity)(Object)this);
+            CraftServer.INSTANCE.playerView.add(this.bukkit);
+        }
     }
 
     @Override
@@ -127,14 +136,20 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
      * @author BukkitFabric
      * @reason Bukkit Multiworld Teleport
      */
-    @Overwrite
-    public void teleport(ServerWorld worldserver, double d0, double d1, double d2, float f, float f1) {
-        this.getBukkitEntity().teleport(new Location(((IMixinWorld)worldserver).getWorldImpl(), d0, d1, d2, f, f1), org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.UNKNOWN);
+    @Inject(at = @At("HEAD"), method = "teleport", cancellable = true)
+    public void teleport(ServerWorld worldserver, double x, double y, double z, float f, float f1, CallbackInfo ci) {
+        PlayerTeleportEvent event = new PlayerTeleportEvent((Player) this.getBukkitEntity(), this.getBukkitEntity().getLocation(), new Location(((IMixinWorld)worldserver).getWorldImpl(), x,y,z,f,f1), PlayerTeleportEvent.TeleportCause.UNKNOWN);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            ci.cancel();
+            return;
+        }
     }
 
     @SuppressWarnings("deprecation")
     @Inject(at = @At("HEAD"), method = "setGameMode", cancellable = true)
-    public void setGameMode(net.minecraft.world.GameMode gm, CallbackInfo ci) {
+    public void setGameMode(net.minecraft.world.GameMode gm, CallbackInfoReturnable<Boolean> ci) {
         if (gm == ((ServerPlayerEntity)(Object)this).interactionManager.getGameMode())
             ci.cancel();
 
@@ -184,11 +199,12 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
 
                 boolean cancelled = false;
                 container = BukkitEventFactory.callInventoryOpenEvent((ServerPlayerEntity)(Object)this, container, cancelled);
-                if (container == null && !cancelled) {
-                    if (itileinventory instanceof Inventory) {
-                        ((Inventory) itileinventory).onClose((ServerPlayerEntity)(Object)this);
-                    } else if (itileinventory instanceof DoubleInventory)
+                if (container == null) {
+                    if (itileinventory instanceof DoubleInventory) {
                         ((DoubleInventory) itileinventory).first.onClose((ServerPlayerEntity)(Object)this);
+                    } else if (itileinventory instanceof Inventory) {
+                        ((Inventory) itileinventory).onClose((ServerPlayerEntity)(Object)this);
+                    }
                     ci.setReturnValue(OptionalInt.empty());
                 }
             }
@@ -203,6 +219,8 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
         }
     }
 
+
+    /*
     @Inject(at = @At("HEAD"), method = "onDeath", cancellable = true)
     public void bukkitizeDeath(DamageSource damagesource, CallbackInfo ci) {
         boolean flag = this.world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
@@ -222,7 +240,7 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
 
         // SPIGOT-5071: manually add player loot tables (SPIGOT-5195 - ignores keepInventory rule)
         this.dropLoot(damagesource, ((ServerPlayerEntity)(Object)this).playerHitTimer > 0);
-        for (org.bukkit.inventory.ItemStack item : this.drops) loot.add(item);
+        loot.addAll(this.drops);
         drops.clear(); // SPIGOT-5188: make sure to clear
 
         Text defaultMessage = ((ServerPlayerEntity)(Object)this).getDamageTracker().getDeathMessage();
@@ -241,8 +259,8 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
                 if (!future.isSuccess()) {
                     boolean flag1 = true;
                     String s = ichatbasecomponent.asTruncatedString(256);
-                    TranslatableText chatmessage = new TranslatableText("death.attack.message_too_long", new Object[]{(new LiteralText(s)).formatted(Formatting.GOLD)});
-                    MutableText ichatmutablecomponent = (new TranslatableText("death.attack.even_more_magic", new Object[]{((ServerPlayerEntity)(Object)this).getDisplayName()})).styled((chatmodifier) -> {
+                    TranslatableText chatmessage = new TranslatableText("death.attack.message_too_long", (new LiteralText(s)).formatted(Formatting.GOLD));
+                    MutableText ichatmutablecomponent = (new TranslatableText("death.attack.even_more_magic", ((ServerPlayerEntity)(Object)this).getDisplayName())).styled((chatmodifier) -> {
                         return chatmodifier.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, chatmessage));
                     });
                     ((ServerPlayerEntity)(Object)this).networkHandler.sendPacket(new CombatEventS2CPacket(((ServerPlayerEntity)(Object)this).getDamageTracker(), CombatEventS2CPacket.Type.ENTITY_DIED, ichatmutablecomponent));
@@ -285,8 +303,9 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
         ((ServerPlayerEntity)(Object)this).setFlag(0, false);
         ((ServerPlayerEntity)(Object)this).getDamageTracker().update();
         ci.cancel();
-        return;
     }
+
+     */
 
     @Shadow
     public void forgiveMobAnger() {}
@@ -299,6 +318,40 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
     @Override
     public ClientConnection getConnectionBF() {
         return this.connectionBF;
+    }
+
+    /**
+     * @author
+     */
+    @Overwrite
+    public void copyFrom(ServerPlayerEntity entityplayer, boolean flag) {
+        if (flag) {
+            ((ServerPlayerEntity)(Object)this).getInventory().clone(entityplayer.getInventory());
+            ((ServerPlayerEntity)(Object)this).setHealth(entityplayer.getHealth());
+            ((ServerPlayerEntity)(Object)this).hungerManager = entityplayer.hungerManager;
+            ((ServerPlayerEntity)(Object)this).experienceLevel = entityplayer.experienceLevel;
+            ((ServerPlayerEntity)(Object)this).totalExperience = entityplayer.totalExperience;
+            ((ServerPlayerEntity)(Object)this).experienceProgress = entityplayer.experienceProgress;
+            ((ServerPlayerEntity)(Object)this).setScore(entityplayer.getScore());
+            ((ServerPlayerEntity)(Object)this).lastNetherPortalPosition = entityplayer.lastNetherPortalPosition;
+        } else if (((ServerPlayerEntity)(Object)this).world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || entityplayer.isSpectator()) {
+            ((ServerPlayerEntity)(Object)this).getInventory().clone(entityplayer.getInventory());
+            ((ServerPlayerEntity)(Object)this).experienceLevel = entityplayer.experienceLevel;
+            ((ServerPlayerEntity)(Object)this).totalExperience = entityplayer.totalExperience;
+            ((ServerPlayerEntity)(Object)this).experienceProgress = entityplayer.experienceProgress;
+            ((ServerPlayerEntity)(Object)this).setScore(entityplayer.getScore());
+        }
+        ((ServerPlayerEntity)(Object)this).enderChestInventory = entityplayer.enderChestInventory;
+        ((ServerPlayerEntity)(Object)this).getDataTracker().set(ServerPlayerEntity.PLAYER_MODEL_PARTS, entityplayer.getDataTracker().get(ServerPlayerEntity.PLAYER_MODEL_PARTS));
+        ((ServerPlayerEntity)(Object)this).syncedExperience = -1;
+        ((ServerPlayerEntity)(Object)this).syncedHealth = -1.0F;
+        ((ServerPlayerEntity)(Object)this).syncedFoodLevel = -1;
+        //((ServerPlayerEntity)(Object)this).removedEntities.addAll(entityplayer.removedEntities);
+        ((ServerPlayerEntity)(Object)this).seenCredits = entityplayer.seenCredits;
+        ((ServerPlayerEntity)(Object)this).enteredNetherPos = entityplayer.enteredNetherPos;
+        ((ServerPlayerEntity)(Object)this).setShoulderEntityLeft(entityplayer.getShoulderEntityLeft());
+        ((ServerPlayerEntity)(Object)this).setShoulderEntityRight(entityplayer.getShoulderEntityRight());
+
     }
 
 }

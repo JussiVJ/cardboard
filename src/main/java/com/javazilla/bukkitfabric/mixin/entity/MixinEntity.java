@@ -224,6 +224,7 @@ import net.minecraft.world.World;
 @Mixin(Entity.class)
 public class MixinEntity implements IMixinCommandOutput, IMixinEntity {
 
+    @Shadow public UUID uuid;
     public CraftEntity bukkit;
     public org.bukkit.projectiles.ProjectileSource projectileSource;
     public ArrayList<org.bukkit.inventory.ItemStack> drops = new ArrayList<org.bukkit.inventory.ItemStack>();
@@ -276,12 +277,6 @@ public class MixinEntity implements IMixinCommandOutput, IMixinEntity {
     public boolean dropStackEvent1(World world, Entity entity, ItemStack itemstack, float f) {
         if (itemstack.isEmpty())
             return false;
-
-        System.out.println("DROP STACK TEST");
-        if (((Entity)(Object)this) instanceof net.minecraft.entity.LivingEntity && !this.forceDrops) {
-            this.drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(itemstack));
-            return false;
-        }
         ItemEntity entityitem = new ItemEntity(this.world, ((Entity) (Object) this).getX(), ((Entity) (Object) this).getY() + (double) f, ((Entity) (Object) this).getZ(), itemstack);
 
         entityitem.setToDefaultPickupDelay();

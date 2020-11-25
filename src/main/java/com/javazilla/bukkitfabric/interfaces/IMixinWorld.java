@@ -18,10 +18,20 @@
  */
 package com.javazilla.bukkitfabric.interfaces;
 
+import net.minecraft.util.math.BlockPos;
+import org.cardboardpowered.impl.block.CapturedBlockState;
 import org.cardboardpowered.impl.world.WorldImpl;
+
+import java.util.Map;
 
 public interface IMixinWorld {
 
     public WorldImpl getWorldImpl();
+
+    public Map<BlockPos, CapturedBlockState> getCapturedBlockStates_BF();
+
+    public boolean isCaptureBlockStates_BF();
+
+    public void setCaptureBlockStates_BF(boolean b);
 
 }

@@ -31,7 +31,7 @@ public class CraftMetaSuspiciousStew extends CraftMetaItem implements Suspicious
 
         CraftMetaSuspiciousStew stewMeta = ((CraftMetaSuspiciousStew) meta);
         if (stewMeta.hasCustomEffects())
-            this.customEffects = new ArrayList<PotionEffect>(stewMeta.customEffects);
+            this.customEffects = new ArrayList<>(stewMeta.customEffects);
     }
 
     CraftMetaSuspiciousStew(CompoundTag tag) {
@@ -39,7 +39,7 @@ public class CraftMetaSuspiciousStew extends CraftMetaItem implements Suspicious
         if (tag.contains(EFFECTS.NBT)) {
             ListTag list = tag.getList(EFFECTS.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND);
             int length = list.size();
-            customEffects = new ArrayList<PotionEffect>(length);
+            customEffects = new ArrayList<>(length);
 
             for (int i = 0; i < length; i++) {
                 CompoundTag effect = list.getCompound(i);

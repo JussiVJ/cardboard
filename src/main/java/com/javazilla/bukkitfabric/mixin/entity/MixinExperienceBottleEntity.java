@@ -17,7 +17,7 @@ import net.minecraft.util.hit.HitResult;
 @Mixin(ExperienceBottleEntity.class)
 public class MixinExperienceBottleEntity extends MixinProjectileEntity {
 
-    @Inject(at = @At("HEAD"), method = "onCollision", cancellable = true)
+   /* @Inject(at = @At("HEAD"), method = "onCollision", cancellable = true)
     public void doBukkitEvent(HitResult movingobjectposition, CallbackInfo ci) {
         HitResult.Type type = movingobjectposition.getType();
         if (type == HitResult.Type.ENTITY) {
@@ -36,6 +36,6 @@ public class MixinExperienceBottleEntity extends MixinProjectileEntity {
         this.removeBF();
         ci.cancel();
         return;
-    }
+    } */
 
 }

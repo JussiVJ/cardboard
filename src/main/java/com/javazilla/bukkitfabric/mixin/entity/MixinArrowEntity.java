@@ -32,7 +32,7 @@ public class MixinArrowEntity implements IMixinArrowEntity {
     @Override
     public void setType(String string) {
         this.potion = Registry.POTION.get(new Identifier(string));
-        (((Entity)(Object)this).getDataTracker()).set(COLOR, PotionUtil.getColor((Collection<StatusEffectInstance>) PotionUtil.getPotionEffects(this.potion, (Collection<StatusEffectInstance>) this.effects)));
+        (((Entity)(Object)this).getDataTracker()).set(COLOR, PotionUtil.getColor(PotionUtil.getPotionEffects(this.potion, this.effects)));
     }
 
 }

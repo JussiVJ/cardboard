@@ -18,20 +18,19 @@
  */
 package com.javazilla.bukkitfabric.interfaces;
 
-import java.util.List;
-
-import org.cardboardpowered.impl.entity.HumanEntityImpl;
-import org.bukkit.inventory.InventoryView;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
+import org.cardboardpowered.impl.entity.HumanEntityImpl;
+import org.cardboardpowered.impl.inventory.CardboardInventoryView;
+
+import java.util.List;
 
 public interface IMixinScreenHandler {
 
-    public InventoryView getBukkitView();
+    public CardboardInventoryView getBukkitView();
 
     public Text getTitle();
 

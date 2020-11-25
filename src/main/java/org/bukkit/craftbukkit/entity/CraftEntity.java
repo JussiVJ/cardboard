@@ -67,6 +67,10 @@ public abstract class CraftEntity implements Entity, CommandSender, IMixinComman
         return nms;
     }
 
+    public void setHandle(net.minecraft.entity.Entity entity){
+        this.nms = entity;
+    }
+
     @Override
     public List<MetadataValue> getMetadata(String metadataKey) {
         return server.getEntityMetadata().getMetadata(this, metadataKey);

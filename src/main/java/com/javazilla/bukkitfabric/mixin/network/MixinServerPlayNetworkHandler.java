@@ -138,7 +138,7 @@ public abstract class MixinServerPlayNetworkHandler implements IMixinPlayNetwork
      */
     @Overwrite
     public void disconnect(Text reason) {
-        String leaveMessage = Formatting.YELLOW + this.player.getEntityName() + " left the game.";
+        String leaveMessage = "";
 
         PlayerKickEvent event = new PlayerKickEvent(CraftServer.INSTANCE.getPlayer(this.player), reason.asString(), leaveMessage);
 
@@ -320,6 +320,7 @@ public abstract class MixinServerPlayNetworkHandler implements IMixinPlayNetwork
         this.player.networkHandler.sendPacket(new PlayerPositionLookS2CPacket(d0 - d3, d1 - d4, d2 - d5, f - f2, f1 - f3, set, this.requestedTeleportId));
     }
 
+
     @Inject(at = @At("HEAD"), method = "onClientCommand", cancellable = true)
     public void onClientCommand(ClientCommandC2SPacket packetplayinentityaction, CallbackInfo ci) {
         NetworkThreadUtils.forceMainThread(packetplayinentityaction, get(), this.player.getServerWorld());
@@ -344,7 +345,8 @@ public abstract class MixinServerPlayNetworkHandler implements IMixinPlayNetwork
         }
     }
 
-    @Inject(at = @At("TAIL"), method = "onSignUpdate", cancellable = true)
+    /*
+    @Inject(at = @At("INVOKE"), method = "onSignUpdate", cancellable = true)
     public void fireSignUpdateEvent(UpdateSignC2SPacket packet, CallbackInfo ci) {
         String[] astring = packet.getText();
 
@@ -357,7 +359,7 @@ public abstract class MixinServerPlayNetworkHandler implements IMixinPlayNetwork
         for (int i = 0; i < astring.length; ++i)
             lines[i] = Formatting.strip(new LiteralText(Formatting.strip(astring[i])).getString());
 
-        SignChangeEvent event = new SignChangeEvent((org.bukkit.craftbukkit.block.CraftBlock) player.getWorld().getBlockAt(x, y, z), player, lines);
+        SignChangeEvent event = new SignChangeEvent(player.getWorld().getBlockAt(x, y, z), player, lines);
         CraftServer.INSTANCE.getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
@@ -368,6 +370,8 @@ public abstract class MixinServerPlayNetworkHandler implements IMixinPlayNetwork
          }
     }
 
+     */
+
     @Inject(at = @At("TAIL"), method = "tick")
     public void decreaseChatSpamField(CallbackInfo ci) {
         for (int spam; (spam = this.messageCooldownBukkit) > 0 && !chatSpamField.compareAndSet((ServerPlayNetworkHandler)(Object)this, spam, spam - 1); );
@@ -377,6 +381,7 @@ public abstract class MixinServerPlayNetworkHandler implements IMixinPlayNetwork
         return (ServerPlayNetworkHandler) (Object) this;
     }
 
+    /*
     //@Overwrite
     @Inject(at = @At("HEAD"), method = "onPlayerMove", cancellable = true)
     public void onPlayerMove(PlayerMoveC2SPacket packetplayinflying, CallbackInfo ci) {
@@ -521,6 +526,7 @@ public abstract class MixinServerPlayNetworkHandler implements IMixinPlayNetwork
         //ci.cancel();
        // return;
     }
+     */
 
     @Shadow
     public void requestTeleport(double d0, double d1, double d2, float f, float f1) {}

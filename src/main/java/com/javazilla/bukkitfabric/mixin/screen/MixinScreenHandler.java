@@ -26,7 +26,7 @@ public abstract class MixinScreenHandler implements IMixinScreenHandler {
     public boolean checkReachable = true;
     //public abstract InventoryView getBukkitView();
 
-    public InventoryView getBukkitView() {
+    public CardboardInventoryView getBukkitView() {
         BukkitFabricMod.LOGGER.info("Using generic InventoryView for ScreenHandler (inventory provided by a mod?)");
         CraftInventory cbi = new CraftInventory(new SimpleInventory( ((ScreenHandler)(Object)this).getStacks().toArray(new ItemStack[0]) ));
         return new CardboardInventoryView(null, cbi, ((ScreenHandler)(Object)this));
@@ -40,7 +40,10 @@ public abstract class MixinScreenHandler implements IMixinScreenHandler {
 
     @Override
     public void transferTo(ScreenHandler other, org.cardboardpowered.impl.entity.HumanEntityImpl player) {
-        InventoryView source = this.getBukkitView(), destination = ((IMixinScreenHandler)other).getBukkitView();
+        CardboardInventoryView source = this.getBukkitView(), destination = ((IMixinScreenHandler)other).getBukkitView();
+        source.setPlayerIfNotSet(player);
+        destination.setPlayerIfNotSet(player);
+
         ((IMixinInventory)((CraftInventory) source.getTopInventory()).getInventory()).onClose(player);
         ((IMixinInventory)((CraftInventory) source.getBottomInventory()).getInventory()).onClose(player);
         ((IMixinInventory)((CraftInventory) destination.getTopInventory()).getInventory()).onOpen(player);

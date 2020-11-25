@@ -128,6 +128,11 @@ public class PlayerImpl extends HumanEntityImpl implements Player {
         return nms;
     }
 
+    public void setHandle(ServerPlayerEntity entity){
+        super.setHandle(entity);
+        this.nms = entity;
+    }
+
     @Override
     public UUID getUniqueId() {
         return super.getUniqueId();
@@ -1106,7 +1111,7 @@ public class PlayerImpl extends HumanEntityImpl implements Player {
 
     @Override
     public void updateInventory() {
-        nms.openHandledScreen((NamedScreenHandlerFactory) nms.currentScreenHandler);
+        nms.onHandlerRegistered(nms.currentScreenHandler, nms.currentScreenHandler.getStacks());
     }
 
     @SuppressWarnings("deprecation")
