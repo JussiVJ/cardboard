@@ -284,7 +284,7 @@ public class BukkitEventFactory {
 
         CraftEntity e = ((IMixinEntity)entity).getBukkitEntity();
         if (!(e instanceof Projectile)) {
-            BukkitLogger.getLogger().warning("Entity \"" + e.nms.getEntityName() + "\" is not an instance of Projectile! Can not fire ProjectileHitEvent!");
+            //BukkitLogger.getLogger().warning("Entity \"" + e.nms.getEntityName() + "\" is not an instance of Projectile! Can not fire ProjectileHitEvent!");
             return;
         }
 
