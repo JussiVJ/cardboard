@@ -184,7 +184,7 @@ public class HumanEntityImpl extends LivingEntityImpl implements HumanEntity {
 
     @Override
     public org.bukkit.entity.Entity getShoulderEntityLeft() {
-        if (!getHandle().getShoulderEntityLeft().isEmpty()) {
+        if (getHandle().getShoulderEntityLeft().getSize() != 0) {
             Optional<net.minecraft.entity.Entity> shoulder = net.minecraft.entity.EntityType.getEntityFromTag(getHandle().getShoulderEntityLeft(), getHandle().world);
             return (!shoulder.isPresent()) ? null : ((IMixinEntity)shoulder.get()).getBukkitEntity();
         }
@@ -193,7 +193,7 @@ public class HumanEntityImpl extends LivingEntityImpl implements HumanEntity {
 
     @Override
     public org.bukkit.entity.Entity getShoulderEntityRight() {
-        if (!getHandle().getShoulderEntityRight().isEmpty()) {
+        if (getHandle().getShoulderEntityRight().getSize() != 0) {
             Optional<net.minecraft.entity.Entity> shoulder = net.minecraft.entity.EntityType.getEntityFromTag(getHandle().getShoulderEntityRight(), getHandle().world);
             return (!shoulder.isPresent()) ? null : ((IMixinEntity)shoulder.get()).getBukkitEntity();
         }

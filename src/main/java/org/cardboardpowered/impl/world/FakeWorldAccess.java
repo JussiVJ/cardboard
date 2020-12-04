@@ -6,13 +6,14 @@ import java.util.function.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.class_5575;
+import net.minecraft.class_5712;
 import net.minecraft.client.world.DummyClientTickScheduler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -32,6 +33,7 @@ import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.light.LightingProvider;
 import net.minecraft.world.dimension.DimensionType;
+import org.jetbrains.annotations.Nullable;
 
 public class FakeWorldAccess implements WorldAccess {
 
@@ -86,6 +88,11 @@ public class FakeWorldAccess implements WorldAccess {
     }
 
     @Override
+    public void method_32888(@Nullable Entity entity, class_5712 arg, BlockPos blockPos) {
+
+    }
+
+    @Override
     public DynamicRegistryManager getRegistryManager() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -96,7 +103,12 @@ public class FakeWorldAccess implements WorldAccess {
     }
 
     @Override
-    public <T extends Entity> List<T> getEntitiesByClass(Class<? extends T> type, Box aabb, Predicate<? super T> prdct) {
+    public <T extends Entity> List<T> getEntitiesByType(class_5575<Entity, T> arg, Box box, Predicate<? super T> predicate) {
+        return null;
+    }
+
+    @Override
+    public <T extends Entity> List<T> getEntitiesByClass(Class<T> type, Box aabb, Predicate<? super T> prdct) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -195,4 +207,13 @@ public class FakeWorldAccess implements WorldAccess {
         return 0;
     }
 
+    @Override
+    public int getSectionCount() {
+        return 0;
+    }
+
+    @Override
+    public int getBottomSectionLimit() {
+        return 0;
+    }
 }

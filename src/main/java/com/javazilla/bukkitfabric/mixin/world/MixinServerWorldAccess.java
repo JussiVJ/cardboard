@@ -9,9 +9,10 @@ import net.minecraft.world.WorldAccess;
 @Mixin(ServerWorldAccess.class)
 public interface MixinServerWorldAccess extends WorldAccess {
 
-    default boolean addAllEntities(Entity entity, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason reason) {
-        entity.streamPassengersRecursively().forEach((e) -> this.spawnEntity(e));
-        return !entity.removed;
+    default boolean addAllEntities(Entity entity) {
+        entity.streamPassengersRecursively().forEach(this::spawnEntity);
+        //return !entity.removed();
+        return entity.isAlive();
     }
 
 }

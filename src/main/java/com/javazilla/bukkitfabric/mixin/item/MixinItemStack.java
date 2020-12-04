@@ -83,12 +83,15 @@ public class MixinItemStack {
         return;
     }
 
+    /**
+     * @author
+     */
     @Overwrite
     public ActionResult useOnBlock(ItemUsageContext context) {
         PlayerEntity playerEntity = context.getPlayer();
         BlockPos blockPos = context.getBlockPos();
         CachedBlockPosition cachedBlockPosition = new CachedBlockPosition(context.getWorld(), blockPos, false);
-        if (playerEntity != null && !playerEntity.abilities.allowModifyWorld && !((ItemStack)(Object)this).canPlaceOn(context.getWorld().getTagManager(), cachedBlockPosition)) {
+        if (playerEntity != null && !playerEntity.getAbilities().allowModifyWorld && !((ItemStack)(Object)this).canPlaceOn(context.getWorld().getTagManager(), cachedBlockPosition)) {
             return ActionResult.PASS;
         }
         ((IMixinWorld)context.getWorld()).setCaptureBlockStates_BF(true);
@@ -125,7 +128,7 @@ public class MixinItemStack {
 
     @Inject(at = @At("HEAD"), method = "damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", cancellable = true)
     public <T extends LivingEntity> void damage(int i, T t0, Consumer<T> consumer, CallbackInfo ci) {
-        if (!t0.world.isClient && (!(t0 instanceof PlayerEntity) || !((PlayerEntity) t0).abilities.creativeMode)) {
+        if (!t0.world.isClient && (!(t0 instanceof PlayerEntity) || !((PlayerEntity) t0).getAbilities().creativeMode)) {
             if (((ItemStack)(Object)this).isDamageable()) {
                 if (((ItemStack)(Object)this).damage(i, t0.getRandom(), t0 instanceof ServerPlayerEntity ? (ServerPlayerEntity) t0 : null)) {
                     consumer.accept(t0);

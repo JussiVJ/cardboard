@@ -236,7 +236,7 @@ public final class CraftItemStack extends ItemStack {
 
         if (size == 1) {
             handle.getTag().remove(ENCHANTMENTS.NBT);
-            if (handle.getTag().isEmpty())
+            if (handle.getTag().getSize() == 0)
                 handle.setTag(null);
             return level;
         }
@@ -572,7 +572,7 @@ public final class CraftItemStack extends ItemStack {
     }
 
     static boolean hasItemMeta(net.minecraft.item.ItemStack item) {
-        return !(item == null || item.getTag() == null || item.getTag().isEmpty());
+        return !(item == null || item.getTag() == null || item.getTag().getSize() == 0);
     }
 
 }

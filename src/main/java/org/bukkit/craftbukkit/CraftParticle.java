@@ -11,6 +11,7 @@ import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -158,7 +159,7 @@ public enum CraftParticle {
         if (particle.getDataType() == Particle.DustOptions.class) {
             Particle.DustOptions data = (Particle.DustOptions) obj;
             Color color = data.getColor();
-            return new DustParticleEffect(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, data.getSize());
+            return new DustParticleEffect(new Vec3d(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f), data.getSize());
         }
         throw new IllegalArgumentException(particle.getDataType().toString());
     }

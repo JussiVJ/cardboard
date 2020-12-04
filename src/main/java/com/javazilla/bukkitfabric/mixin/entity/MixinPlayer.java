@@ -21,6 +21,7 @@ package com.javazilla.bukkitfabric.mixin.entity;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -149,7 +150,8 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
 
     @SuppressWarnings("deprecation")
     @Inject(at = @At("HEAD"), method = "setGameMode", cancellable = true)
-    public void setGameMode(net.minecraft.world.GameMode gm, CallbackInfoReturnable<Boolean> ci) {
+    public void setGameMode(CompoundTag gmTag, CallbackInfo ci) {
+        net.minecraft.world.GameMode gm = net.minecraft.world.GameMode.byId(gmTag.getInt("playerGameType"));
         if (gm == ((ServerPlayerEntity)(Object)this).interactionManager.getGameMode())
             ci.cancel();
 

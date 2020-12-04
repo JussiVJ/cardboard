@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -1128,7 +1130,10 @@ public class PlayerImpl extends HumanEntityImpl implements Player {
         if (mode == null)
             throw new IllegalArgumentException("GameMode cannot be null");
 
-        getHandle().setGameMode(net.minecraft.world.GameMode.byId(mode.getValue()));
+        CompoundTag gameMode = new CompoundTag();
+        gameMode.put("playerGameType", IntTag.of(mode.getValue()));
+        gameMode.put("previousPlayerGameType", IntTag.of(this.getGameMode().ordinal()));
+        getHandle().setGameMode(gameMode);
     }
 
     public GameProfile getProfile() {

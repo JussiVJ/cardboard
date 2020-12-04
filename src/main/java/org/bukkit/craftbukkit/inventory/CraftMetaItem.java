@@ -378,7 +378,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
 
         for (int i = 0; i < size; i++) {
             CompoundTag entry = mods.getCompound(i);
-            if (entry.isEmpty()) continue; // entry is not an actual CompoundTag. getCompound returns empty CompoundTag in that case
+            if (entry.getSize() == 0) continue; // entry is not an actual CompoundTag. getCompound returns empty CompoundTag in that case
 
             EntityAttributeModifier nmsModifier = EntityAttributeModifier.fromTag(entry);
             if (nmsModifier == null) continue;
@@ -623,7 +623,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
                 continue;
             net.minecraft.entity.attribute.EntityAttributeModifier nmsModifier = CardboardAttributeInstance.convert(entry.getValue());
             CompoundTag sub = nmsModifier.toTag();
-            if (sub.isEmpty())
+            if (sub.getSize() == 0)
                 continue;
 
             String name = entry.getKey().getKey().toString();

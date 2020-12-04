@@ -1,5 +1,7 @@
 package com.javazilla.bukkitfabric.mixin.item;
 
+import net.minecraft.item.ItemStack;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -45,23 +47,22 @@ public class MixinBucketItem extends Item {
     @Shadow
     public Fluid fluid;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/FluidDrainable;tryDrainFluid(Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Lnet/minecraft/fluid/Fluid;"))
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/FluidDrainable;tryDrainFluid(Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Lnet/minecraft/item/ItemStack;"))
     public void use_BF(World world, PlayerEntity entityhuman, Hand enumhand, CallbackInfoReturnable<TypedActionResult> ci) {
         BlockHitResult movingobjectpositionblock = raycast(world, entityhuman, this.fluid == Fluids.EMPTY ? RaycastContext.FluidHandling.NONE : RaycastContext.FluidHandling.ANY);
-        BlockHitResult movingobjectpositionblock1 = (BlockHitResult) movingobjectpositionblock;
+        BlockHitResult movingobjectpositionblock1 = movingobjectpositionblock;
         BlockPos blockposition = movingobjectpositionblock1.getBlockPos();
         BlockState iblockdata = world.getBlockState(blockposition);
 
         if (iblockdata.getBlock() instanceof FluidDrainable) {
-            Fluid dummyFluid = ((FluidDrainable) iblockdata.getBlock()).tryDrainFluid(FakeWorldAccess.INSTANCE, blockposition, iblockdata);
-            PlayerBucketFillEvent event = BukkitEventFactory.callPlayerBucketFillEvent((ServerWorld) world, entityhuman, blockposition, blockposition, movingobjectpositionblock.getSide(), entityhuman.getStackInHand(enumhand), dummyFluid.getBucketItem(), enumhand); // Paper - add enumhand
+            ItemStack dummyFluid = ((FluidDrainable) iblockdata.getBlock()).tryDrainFluid(FakeWorldAccess.INSTANCE, blockposition, iblockdata);
+            PlayerBucketFillEvent event = BukkitEventFactory.callPlayerBucketFillEvent(world, entityhuman, blockposition, blockposition, movingobjectpositionblock.getSide(), entityhuman.getStackInHand(enumhand), dummyFluid.getItem(), enumhand); // Paper - add enumhand
     
             if (event.isCancelled()) {
                 ((ServerPlayerEntity) entityhuman).networkHandler.sendPacket(new BlockUpdateS2CPacket(world, blockposition)); // SPIGOT-5163 (see PlayerInteractManager)
                 ((Player)((IMixinServerEntityPlayer) entityhuman).getBukkitEntity()).updateInventory(); // SPIGOT-4541
                 ci.setReturnValue(new TypedActionResult(ActionResult.FAIL, entityhuman.getStackInHand(enumhand)));
-                return;
             }
         }
     }
@@ -76,10 +77,10 @@ public class MixinBucketItem extends Item {
     
             // CraftBukkit start
             if (flag1 && entityhuman != null) {
-                PlayerBucketEmptyEvent event = BukkitEventFactory.callPlayerBucketEmptyEvent((ServerWorld) world, entityhuman, blockposition, movingobjectpositionblock.getBlockPos(), movingobjectpositionblock.getSide(), entityhuman.getStackInHand(entityhuman.getActiveHand()), entityhuman.getActiveHand());
+                PlayerBucketEmptyEvent event = BukkitEventFactory.callPlayerBucketEmptyEvent(world, entityhuman, blockposition, movingobjectpositionblock.getBlockPos(), movingobjectpositionblock.getSide(), entityhuman.getStackInHand(entityhuman.getActiveHand()), entityhuman.getActiveHand());
                 if (event.isCancelled()) {
                     ((ServerPlayerEntity) entityhuman).networkHandler.sendPacket(new BlockUpdateS2CPacket(world, blockposition));
-                    ((Player)((IMixinEntity)((ServerPlayerEntity) entityhuman)).getBukkitEntity()).updateInventory();
+                    ((Player)((IMixinEntity) entityhuman).getBukkitEntity()).updateInventory();
                     ci.setReturnValue(false);
                     return;
                 }

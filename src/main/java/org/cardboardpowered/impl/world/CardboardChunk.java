@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.HeightLimitView;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
@@ -281,7 +283,7 @@ public class CardboardChunk implements Chunk {
         BiomeArray biome = null;
 
         if (includeBiome || includeBiomeTempRain)
-            biome = new BiomeArray(((ServerWorld)world.getHandle()).getRegistryManager().get(Registry.BIOME_KEY), new ChunkPos(x, z), ((ServerWorld)world.getHandle()).getChunkManager().getChunkGenerator().getBiomeSource());
+            biome = new BiomeArray(world.getHandle().getRegistryManager().get(Registry.BIOME_KEY), FakeWorldAccess.INSTANCE.getChunk(x, z), new ChunkPos(x, z), world.getHandle().getChunkManager().getChunkGenerator().getBiomeSource());
 
         // Fill with empty data
         int hSection = world.getMaxHeight() >> 4;

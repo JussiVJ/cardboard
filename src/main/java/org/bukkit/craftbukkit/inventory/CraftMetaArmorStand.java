@@ -34,7 +34,7 @@ public class CraftMetaArmorStand extends CraftMetaItem {
 
     @Override
     void serializeInternal(Map<String, Tag> internalTags) {
-        if (entityTag != null && !entityTag.isEmpty()) internalTags.put(ENTITY_TAG.NBT, entityTag);
+        if (entityTag != null && entityTag.getSize() != 0) internalTags.put(ENTITY_TAG.NBT, entityTag);
     }
 
     @Override

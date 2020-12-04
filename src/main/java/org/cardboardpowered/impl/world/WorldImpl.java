@@ -640,7 +640,7 @@ public class WorldImpl implements World {
 
     @Override
     public int getMaxHeight() {
-        return nms.getHeight();
+        return nms.getTopHeightLimit();
     }
 
     @Override
