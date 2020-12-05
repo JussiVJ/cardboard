@@ -114,7 +114,6 @@ public class MixinLivingEntity extends MixinEntity implements IMixinLivingEntity
     public void doRegainHealthEvent(float f, CallbackInfo ci) {
         heal(f, EntityRegainHealthEvent.RegainReason.CUSTOM);
         ci.cancel();
-        return;
     }
 
     public void heal(float f, EntityRegainHealthEvent.RegainReason regainReason) {

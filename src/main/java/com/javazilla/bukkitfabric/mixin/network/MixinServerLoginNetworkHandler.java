@@ -86,7 +86,7 @@ public class MixinServerLoginNetworkHandler implements IMixinServerLoginNetworkH
      */
     @Overwrite
     public void onKey(LoginKeyC2SPacket keyPacket) {
-        Validate.validState(this.state == ServerLoginNetworkHandler.State.KEY, "Unexpected key packet", new Object[0]);
+        Validate.validState(this.state == ServerLoginNetworkHandler.State.KEY, "Unexpected key packet");
         PrivateKey privatekey = this.server.getKeyPair().getPrivate();
 
         LoginKeyHandler h = LoginKeyHandler.getLoginKeyHandler(state, secretKey, privatekey);

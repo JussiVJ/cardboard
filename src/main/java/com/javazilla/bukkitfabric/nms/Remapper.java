@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.cardboardpowered.ingot.IngotReader;
@@ -32,7 +31,7 @@ public class Remapper {
 
     public static BukkitLogger LOGGER = new BukkitLogger("BukkitNmsRemapper", null);
 
-    public static File configDir = new File(FabricLoader.getInstance().getConfigDir().toFile(), "bukkit4fabric");
+    public static File configDir = new File(FabricLoader.getInstance().getConfigDir().toFile(), "data/bukkit4fabric");
     public static File remappedDir = new File(configDir, "remapped-plugins");
     public static File backup = new File(remappedDir, "backup-plugins");
     public static File versionFix;

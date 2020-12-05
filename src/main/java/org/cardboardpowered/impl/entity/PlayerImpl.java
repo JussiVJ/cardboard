@@ -1132,7 +1132,7 @@ public class PlayerImpl extends HumanEntityImpl implements Player {
 
         CompoundTag gameMode = new CompoundTag();
         gameMode.put("playerGameType", IntTag.of(mode.getValue()));
-        gameMode.put("previousPlayerGameType", IntTag.of(this.getGameMode().ordinal()));
+        gameMode.put("previousPlayerGameType", IntTag.of(this.getGameMode().getValue()));
         getHandle().setGameMode(gameMode);
     }
 

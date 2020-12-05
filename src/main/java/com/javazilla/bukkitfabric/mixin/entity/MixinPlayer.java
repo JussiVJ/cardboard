@@ -148,7 +148,7 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
         }
     }
 
-    @SuppressWarnings("deprecation")
+    /*@SuppressWarnings("deprecation")
     @Inject(at = @At("HEAD"), method = "setGameMode", cancellable = true)
     public void setGameMode(CompoundTag gmTag, CallbackInfo ci) {
         net.minecraft.world.GameMode gm = net.minecraft.world.GameMode.byId(gmTag.getInt("playerGameType"));
@@ -159,7 +159,7 @@ public class MixinPlayer extends MixinLivingEntity implements IMixinCommandOutpu
         CraftServer.INSTANCE.getPluginManager().callEvent(event);
         if (event.isCancelled())
             ci.cancel();
-    }
+    }*/
 
     public String locale = "en_us"; // CraftBukkit - add, lowercase
 
